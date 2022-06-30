@@ -1,50 +1,116 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
 
-    <title>Number guessing game</title>
+<head>
+  <meta charset="utf-8">
 
-    <style>
-      html {
-        font-family: sans-serif;
+  <title>Number guessing game</title>
+
+  <style>
+    html {
+      font-family: sans-serif;
+    }
+
+    body {
+      width: 50%;
+      max-width: 800px;
+      min-width: 480px;
+      margin: 0 auto;
+    }
+
+    .lastResult {
+      color: black;
+      padding: 3px;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Number guessing game</h1>
+
+  <p>We have selected a random number between 1 and 100. See if you can guess it in 10 turns or fewer. We'll tell you if
+    your guess was too high or too low.</p>
+
+  <div class="form" id="here">
+    <label for="guessField">Enter a guess: </label>
+    <input type="text" id="guessField" class="guessField">
+    <input type="submit" value="Submit guess" class="guessSubmit">
+  </div>
+
+  <div class="resultParas">
+    <p class="guesses"></p>
+    <p class="lastResult"></p>
+    <p class="lowOrHi"></p>
+  </div>
+
+  <script>
+
+    // Your JavaScript goes here
+    let randomNum = Math.floor(Math.random() * 101);
+    console.log(randomNum);
+    let turn = 1;
+    let guessed = document.getElementById("guessField");
+    let guessedNum;
+    let restartBtn;
+    // let prevNum = "Not Available";
+    
+    guessed.addEventListener("change", (e) => guessedNum = parseInt(e.target.value));
+    let guessShow = document.querySelector(".guesses");
+    let lastResult = document.querySelector(".lastResult");
+    let lowOrHi = document.querySelector(".lowOrHi");
+    let res = document.querySelector(".resultParas");
+
+    let guessSubmit = document.querySelector(".guessSubmit");
+
+    guessSubmit.addEventListener("click", checkGuessedNum);
+    
+
+    function checkGuessedNum() {
+      guessShow.innerText = turn;
+      lastResult.innerText = guessedNum;
+      if (turn <= 10) {
+        if (guessedNum < randomNum) {
+          lowOrHi.innerText = "The Guessed Number is LESS THAN the random number";
+        } else if (guessedNum > randomNum) {
+          lowOrHi.innerText = "The Guessed Number is MORE THAN the random number";
+        } else {
+          lowOrHi.innerText = "You guessed it RIGHT";
+          let conf = confirm("Congratulations, Do you want to restart");
+          resetGame();
+          if (!conf)  {
+            guessed.disabled = true;
+            guessSubmit.disabled = true;
+            restartBtn = document.createElement("button");
+            restartBtn.textContent = "Restart Game"
+            console.log(restartBtn, res);
+            res.appendChild(restartBtn);
+            restartBtn.addEventListener("click", () => {
+              guessed.disabled = false;
+              guessSubmit.disabled = false;
+              restartBtn.remove();
+            })
+          }
+        }
+        turn += 1;
+        // prevNum = guessedNum
+      } else {
+        alert("Game Over. Out of Turns");
+        resetGame();
       }
+    }
 
-      body {
-        width: 50%;
-        max-width: 800px;
-        min-width: 480px;
-        margin: 0 auto;
-      }
+    function resetGame () {
+      turn = 0;
+      guessedNum = "";
+      guessed.value = "";
+      guessShow.innerText = "";
+      lastResult.innerText = "";
+      lowOrHi.innerText = "";
+      randomNum = Math.floor(Math.random() * 101);
+    }
 
-      .lastResult {
-        color: white;
-        padding: 3px;
-      }
-    </style>
-  </head>
+      // }
+  </script>
+</body>
 
-  <body>
-    <h1>Number guessing game</h1>
-
-    <p>We have selected a random number between 1 and 100. See if you can guess it in 10 turns or fewer. We'll tell you if your guess was too high or too low.</p>
-
-    <div class="form">
-      <label for="guessField">Enter a guess: </label>
-      <input type="text" id="guessField" class="guessField">
-      <input type="submit" value="Submit guess" class="guessSubmit">
-    </div>
-
-    <div class="resultParas">
-      <p class="guesses"></p>
-      <p class="lastResult"></p>
-      <p class="lowOrHi"></p>
-    </div>
-
-    <script>
-
-      // Your JavaScript goes here
-
-    </script>
-  </body>
 </html>
